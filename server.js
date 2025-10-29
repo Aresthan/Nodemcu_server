@@ -1,12 +1,16 @@
+// server.js
 const express = require("express");
 const app = express();
 
+// LED durumu
 let ledState = "off";
 
+// Ana sayfa
 app.get("/", (req, res) => {
   res.send(`LED şu anda: ${ledState}`);
 });
 
+// LED açma/kapama
 app.get("/set", (req, res) => {
   const state = req.query.state;
   if (state === "on" || state === "off") {
@@ -17,9 +21,11 @@ app.get("/set", (req, res) => {
   }
 });
 
+// Durum sorgulama
 app.get("/status", (req, res) => {
   res.send(ledState);
 });
 
+// Render uyumlu port ayarı
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server ${PORT} portunda çalışıyor...`));
