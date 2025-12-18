@@ -2,6 +2,9 @@
 const express = require("express");
 const app = express();
 
+// 👇 BU SATIR ÇOK ÖNEMLİ: www klasöründeki dosyaları /app yolunda çalıştırır
+app.use("/app", express.static("www"));
+
 // LED durumu
 let ledState = "off";
 
