@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Röle Kontrol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0d6efd">
+    <style>
+        body { font-family: sans-serif; text-align: center; margin-top: 50px; background: #f0f2f5; }
+        .container { background: white; padding: 20px; border-radius: 20px; display: inline-block; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h2 { color: #333; }
+        .status-box { margin: 20px; padding: 10px; border-radius: 10px; font-weight: bold; background: #eee; }
+        button {
+            width: 220px; height: 70px; font-size: 22px; font-weight: bold;
+            margin: 15px; border: none; border-radius: 12px; color: white;
+            cursor: pointer; transition: 0.3s;
+        }
+        .on-btn { background: #28a745; }
+        .off-btn { background: #dc3545; }
+        button:active { transform: scale(0.95); opacity: 0.8; }
+        #status-text { color: #007bff; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Röle Kontrol Paneli</h2>
+    
+    <div class="status-box">
+        Cihaz Durumu: <span id="status-text">Yükleniyor...</span>
+    </div>
+
+    <button class="on-btn" onclick="sendCmd('on')">SİSTEMİ AÇ</button>
+    <br>
+    <button class="off-btn" onclick="sendCmd('off')">SİSTEMİ KAPAT</button>
+</div>
+
+<script>
+    const BASE_URL = "https://nodemcu-server-bcpu.onrender.com";
+
+    // Komut gönderme fonksiyonu (ON/OFF)
+    function sendCmd(state) {
+        fetch(`${BASE_URL}/set?state=${state}`)
+            .then(response => {
+                console.log("Komut gönderildi: " + state);
+                checkStatus(); // Komut sonrası durumu güncelle
+            })
+            .catch(err => alert("Hata: " + err));
+    }
+
+    // Durum kontrol fonksiyonu (STATUS)
+    function checkStatus() {
+        fetch(`${BASE_URL}/status`)
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("status-text").innerText = data.toUpperCase();
+            })
+            .catch(err => {
+                document.getElementById("status-text").innerText = "Bağlantı Yok";
+            });
+    }
+
+    // Sayfa açıldığında durumu kontrol et
+    checkStatus();
+    
+    // Her 5 saniyede bir durumu otomatik güncelle
+    setInterval(checkStatus, 5000);
+
+    // PWA Service Worker kaydı
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js');
+    }
+</script>
+
+</body>
+</html>
