@@ -1,6 +1,6 @@
 {
   "name": "Röle Kontrol Sistemi",
-  "short_name": "Röle",
+  "short_name": "MeDa Tech",
   "description": "NodeMCU Röle Kontrol Paneli",
   "start_url": "/app",
   "display": "standalone",
